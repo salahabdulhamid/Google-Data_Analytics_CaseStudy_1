@@ -1,0 +1,438 @@
+---
+title: "Cyclistic Bike-Share Program"
+author: "Salah Mohamed"
+date: "1/17/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Business Task Statement
+How to Convert Casual riders into annual members?
+
+## Question Asked
+How do annual members and casual riders use bikes differently?
+
+## Key Stakeholders:
+1) Primary: Lily Moreno My Direct Manager
+
+2) Secondary: Marketing Analytics Team
+
+3) Upper Management: Cyclistic Executive team
+
+## Goal of analysis:
+To understand how casual riders and annual members use Cyclistic bikes differently
+
+## Data Resources Used:
+Trip data for both casual and annual riders made available by Motivate International Inc<https://divvy-tripdata.s3.amazonaws.com/index.html>. under this license<https://ride.divvybikes.com/data-license-agreement>.)
+
+# Project Phases: 
+The main question is How do annual members and casual riders use Cyclistic bikes differently?
+
+## Ask:
+### Deliverable:
+A clear statement of the business task (How to Convert Casual riders into annual members?)
+
+## Prepare: 
+### Deliverable:
+
+A description of all data sources used: 
+
+1- Data is downloaded from Motivate International Inc.
+
+2- Downloaded files trip_data_ from 2019 Q1 to 2020 Q1
+
+3- CSV files downloaded and saved in one main csv file called(cyclistic_trip_data_2019_q1_to_q4_to_2020_q1)
+
+4- Csv file names are (Divvy_Trips_2019_Q1.csv, Divvy_Trips_2019_Q2.csv, Divvy_Trips_2019_Q3.csv,  Divvy_Trips_2019_Q4.csv, Divvy_Trips_2020_Q1.csv)
+
+5- Files were too large to open with excel and spreadsheets 
+
+6- all files are imported to R in as vectors (the reason we use R because it's faster, allows me to use viz to check bias, and I want to go further to the machine learning field so it will allow me to do so because it's close to Python, and allow algorithms and machine learning)
+
+## Process:
+### Deliverable:
+Documentation of any cleaning or manipulation of data, they are as follows:
+
+Setting Working Directory
+```{r}
+setwd("D:/00-Data/02-Google Data Analytics/0000-Case Study/01-First Track Casestudy 1/Bikeshare Data/cyclistic_trip_data 2019_to_2020/rdirectory/00-casestudy final directory")
+```
+
+Installing and loading the packages
+```{r}
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+install.packages("lubridate", repos = "http://cran.us.r-project.org")
+install.packages("here", repos = "http://cran.us.r-project.org")
+install.packages("skimr", repos = "http://cran.us.r-project.org")
+install.packages("janitor", repos = "http://cran.us.r-project.org")
+install.packages("readr", repos = "http://cran.us.r-project.org")
+install.packages("Tmisc", repos = "http://cran.us.r-project.org")
+```
+
+Loading the packages
+```{r}
+library(lubridate)
+library(tidyverse)
+library(ggplot2)
+library(here)
+library(skimr)
+library(janitor)
+library(dplyr)
+library(readr)
+library(Tmisc)
+```
+
+Loading the data set csv files to data frames
+```{r}
+q1_2019 <- read_csv("Divvy_Trips_2019_Q1.csv")
+q2_2019 <- read_csv("Divvy_Trips_2019_Q2.csv")
+q3_2019 <- read_csv("Divvy_Trips_2019_Q3.csv")
+q4_2019 <- read_csv("Divvy_Trips_2019_Q4.csv")
+q1_2020 <- read_csv("Divvy_Trips_2020_Q1.csv")
+```
+
+Quick look inside each vector to know what is up with the data
+```{r}
+colnames(q1_2019)
+colnames(q2_2019)
+colnames(q3_2019)
+colnames(q4_2019)
+colnames(q1_2020)
+head(q1_2019)
+head(q2_2019)
+head(q3_2019)
+head(q4_2019)
+head(q1_2020)
+# Checking for duplicate values
+sum(duplicated(q1_2019))
+sum(duplicated(q2_2019))
+sum(duplicated(q3_2019))
+sum(duplicated(q4_2019))
+sum(duplicated(q1_2020))
+# Checking for missing values
+sum(is.na(q1_2019))
+sum(is.na(q2_2019))
+sum(is.na(q3_2019))
+sum(is.na(q4_2019))
+sum(is.na(q1_2020))
+
+glimpse(q1_2019)
+glimpse(q2_2019)
+glimpse(q3_2019)
+glimpse(q4_2019)
+glimpse(q1_2020)
+
+# Checking the data types in each column in all data sets
+str(q1_2019)
+str(q2_2019)
+str(q3_2019)
+str(q4_2019)
+str(q1_2020)
+```
+
+
+## Quality & Tidiness Issues Found: 
+Column names are not consistent (q2_2019 has different column names need to be changed).
+
+The trip_id column Must be al as characters.
+
+There are some columns in (q1_2020) needs to be removed (rideable_type, start_lat, start_lng, end_lat, end_lng).
+
+There are some columns in (q1_2019, q2_2019, q3_2019, q4_2019) to remove (gender, birthyear).
+
+No Duplicates Found.
+
+There are missing values (q1_2019, gender, birthyear), (q2_2019, birthyear), (q3_2019, gender birthyear),(q4_2019, gender birthyear), (q1_2020, 4 values).
+
+
+### First Cleaning Phase
+```{r}
+# Renaming all columns into specified consistent names
+q1_2019 <- rename(q1_2019
+                  ,trip_id = trip_id
+                  ,start_time = start_time
+                  ,end_time = end_time
+                  ,bike_id = bikeid
+                  ,trip_duration = tripduration
+                  ,start_station_id = from_station_id
+                  ,start_station_name = from_station_name
+                  ,end_station_id = to_station_id
+                  ,end_station_name = to_station_name
+                  ,user_type = usertype
+                  ,gender = gender
+                  ,birth_year = birthyear )
+
+q2_2019 <- rename(q2_2019
+                  ,trip_id = "01 - Rental Details Rental ID"
+                  ,start_time = "01 - Rental Details Local Start Time" 
+                  ,end_time = "01 - Rental Details Local End Time"
+                  ,bike_id = "01 - Rental Details Bike ID"
+                  ,trip_duration = "01 - Rental Details Duration In Seconds Uncapped" 
+                  ,start_station_id = "03 - Rental Start Station ID"
+                  ,start_station_name = "03 - Rental Start Station Name"
+                  ,end_station_id = "02 - Rental End Station ID"
+                  ,end_station_name = "02 - Rental End Station Name"
+                  ,user_type = "User Type"
+                  ,gender = "Member Gender"
+                  ,birth_year = "05 - Member Details Member Birthday Year")
+
+q3_2019 <- rename(q3_2019
+                  ,trip_id = trip_id
+                  ,start_time = start_time
+                  ,end_time = end_time
+                  ,bike_id = bikeid
+                  ,trip_duration = tripduration
+                  ,start_station_id = from_station_id
+                  ,start_station_name = from_station_name
+                  ,end_station_id = to_station_id
+                  ,end_station_name = to_station_name
+                  ,user_type = usertype
+                  ,gender = gender
+                  ,birth_year = birthyear)
+
+q4_2019 <- rename(q4_2019
+                  ,trip_id = trip_id
+                  ,start_time = start_time
+                  ,end_time = end_time
+                  ,bike_id = bikeid
+                  ,trip_duration = tripduration
+                  ,start_station_id = from_station_id 
+                  ,start_station_name = from_station_name
+                  ,end_station_id = to_station_id
+                  ,end_station_name = to_station_name
+                  ,user_type = usertype
+                  ,gender = gender
+                  ,birth_year = birthyear)
+
+q1_2020 <- rename(q1_2020
+                  ,trip_id = ride_id
+                  ,start_time = started_at
+                  ,end_time = ended_at
+                  ,bike_id = rideable_type
+                  ,start_station_id = start_station_id 
+                  ,start_station_name = start_station_name
+                  ,end_station_id = end_station_id
+                  ,end_station_name = end_station_name
+                  ,user_type = member_casual)
+
+# Convert ride_id in all dataframes to characters to allow merging all in one data set 
+q1_2019 <-  mutate(q1_2019, trip_id = as.character(trip_id))
+q2_2019 <-  mutate(q2_2019, trip_id = as.character(trip_id))
+q3_2019 <-  mutate(q3_2019, trip_id = as.character(trip_id))
+q4_2019 <-  mutate(q4_2019, trip_id = as.character(trip_id))
+q1_2020 <-  mutate(q1_2020, trip_id = as.character(trip_id))
+q1_2019 <-  mutate(q1_2019, bike_id = as.character(bike_id))
+q2_2019 <-  mutate(q2_2019, bike_id = as.character(bike_id))
+q3_2019 <-  mutate(q3_2019, bike_id = as.character(bike_id))
+q4_2019 <-  mutate(q4_2019, bike_id = as.character(bike_id))
+q1_2020 <-  mutate(q1_2020, bike_id = as.character(bike_id))
+```
+
+Merging individual quarter's into one main data frame
+```{r}
+trip_data <- bind_rows(q1_2019, q2_2019, q3_2019, q4_2019, q1_2020)
+```
+
+### Assessing all_trips data frame to stand on it's quality and tidiness.
+```{r}
+str(trip_data)
+glimpse(trip_data)
+summary(trip_data)
+class(trip_data)
+class(trip_data$start_time)
+class(trip_data$end_time)
+class(trip_data$bike_id)
+class(trip_data$trip_duration)
+class(trip_data$start_station_name)
+class(trip_data$end_station_name)
+class(trip_data$user_type)
+class(trip_data$birth_year)
+```
+
+## More issues found with the new full data frame
+
+Start and end time are a group of datetime needs to be separated to YY MM DD time.
+
+There are unneeded columns need to be removed (bike_id, start_station_id, end_station_id, gender, start_lat, start_lng, end_lat, end_lng).
+
+
+### Second cleaning phase
+```{r}
+# Creating a date column to be able to explore trends based on the day or month, then column for YY MM DD Dayof week
+trip_data$date <- as.Date(trip_data$start_time)
+trip_data$month <- format(as.Date(trip_data$date), "%M")
+trip_data$day <- format(as.Date(trip_data$date), "%D")
+trip_data$year <- format(as.Date(trip_data$date), "%Y")
+trip_data$day_of_week <- format(as.Date(trip_data$date), "%A")
+
+# Removing unneeded variables
+trip_data <- trip_data %>%  
+  select(-c(start_station_id, end_station_id, gender, start_lat, start_lng, end_lat, end_lng))
+# Rechecking the data frame
+glimpse(trip_data)
+str(trip_data)
+```
+
+Assessing the quality & Tidiness of each variable
+```{r}
+names(trip_data)
+unique(trip_data$start_station_name)
+unique(trip_data$end_station_name)
+unique(trip_data$user_type)
+unique(trip_data$birth_year)
+unique(trip_data$date)
+unique(trip_data$trip_duration)
+unique(trip_data$day_of_week)
+sum(is.na(trip_data$trip_duration))
+```
+
+# More Issues found
+start_station name includes unneeded values("MTL-ECO5.1-01", "HQ QR" )
+
+End station name also has unneeded values(HQ QR", "MTL-ECO5.1-01" ) and NA values
+
+User type column values need to be consistent (member& casual only)
+
+Week days are not ordered correctly
+
+There are NA's in trip duration column so we will calculate it manually using start and end time
+
+### Final Cleaning
+```{r}
+# replacing "Subscriber" with "member" and "Customer" with "casual"
+trip_data <-  trip_data %>% 
+  mutate(user_type = recode(user_type
+                            ,"Subscriber" = "member"
+                            ,"Customer" = "casual"))
+
+# Adding a "ride_length" calculation to all_trips (in seconds)
+trip_data$ride_length <- difftime(trip_data$end_time,trip_data$start_time)
+
+# Converting ride length to minutes
+trip_data <- trip_data %>%
+  mutate(ride_length_minu=ride_length/60)
+
+# Convert "ride_length" from Factor to numeric so we can run calculations on the data
+trip_data$ride_length_minu <- as.numeric(trip_data$ride_length_minu)
+
+# Ordering days of week properly
+trip_data$day_of_week <- ordered(trip_data$day_of_week, levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+
+# Removing "bad" data
+trip_data <- trip_data[!(trip_data$start_station_name == "HQ QR" | trip_data$ride_length<0),]
+```
+
+### Final Check
+```{r}
+colnames(trip_data)  #List of final column names
+nrow(trip_data)  #How many rows are in the final data frame?
+dim(trip_data)  #Dimensions of the final data frame?
+head(trip_data, 20)  # the first 20 rows of the final data frame.  
+tail(trip_data, 20 ) # the last 20 rows of the final data frame.
+str(trip_data)       # list of columns and data types (numeric, character, etc)
+summary(trip_data)  # Basic Statistical summary of data
+```
+
+Rechecking the most important variables in the Data which will be guiding during the analysis phase
+```{r}
+unique(trip_data$start_station_name)
+unique(trip_data$user_type)
+unique(trip_data$birth_year)
+unique(trip_data$date)
+unique(trip_data$ride_length_minu)
+unique(trip_data$day_of_week)
+sum(is.na(trip_data$trip_duration))
+```
+
+## Analyze:
+### Key tasks
+
+Aggregate your data so it’s useful and accessible.
+
+Organize and format your data.
+
+Perform calculations.
+
+Identify trends and relationships.
+
+### Deliverable:
+A summary of your analysis
+
+```{r}
+# Descriptive analysis on ride_length in minutes
+mean(trip_data$ride_length_minu) 
+median(trip_data$ride_length_minu) 
+max(trip_data$ride_length_minu) 
+min(trip_data$ride_length_minu) 
+summary(trip_data$ride_length_minu)
+
+# Comparing ride_length per minute for members and casual users
+aggregate(trip_data$ride_length_minu ~ trip_data$user_type, FUN = mean)
+aggregate(trip_data$ride_length_minu ~ trip_data$user_type, FUN = median)
+aggregate(trip_data$ride_length_minu ~ trip_data$user_type, FUN = min)
+aggregate(trip_data$ride_length_minu ~ trip_data$user_type, FUN = max)
+
+# comparing ride_length per minute for members and casual users during different week days and creating visuals
+aggregate(trip_data$ride_length_minu ~ trip_data$user_type + trip_data$day_of_week, FUN = mean)
+aggregate(trip_data$ride_length_minu ~ trip_data$user_type + trip_data$day_of_week, FUN = min)
+aggregate(trip_data$ride_length_minu ~ trip_data$user_type + trip_data$day_of_week, FUN = max)
+
+# The most used start station in general and  per each user type
+count(trip_data, start_station_name, sort = TRUE)
+count(trip_data, end_station_name, sort = TRUE)
+count(trip_data, start_station_name, sort = FALSE)
+count(trip_data, end_station_name, sort = FALSE)
+count(trip_data, user_type, start_station_name,sort= TRUE)
+count(trip_data, start_station_name, user_type, sort= FALSE)
+count(trip_data, user_type, day_of_week, sort = TRUE)
+count(trip_data, user_type, sort = FALSE)
+names(trip_data)
+```
+
+## Share:
+
+Share is divided by two steps Key insights found from conduction some descriptive analysis, then a final file version is made and saved as CSV file to create visuals using Tableau.
+
+
+## Key Insights & surprises about the data:
+
+1- The average ride length per minute for casual users is more than premium users.
+
+2- Friday has the longest avg_ride_length_per_minute for casual users, However Saturday has the longest avg ride per minute for annual members.
+
+3- The maximum ride length per minute for member users occurs on Tuesday, however the maximum ride length per minute for casual users occur on Thursday.
+
+4- The most used start station in general is "Streeter Dr & Grand Ave " with the amount of 70447 occurrences, Also which surprising it's the most used end station name by 84479 occurrences
+
+5- The least used start_station_name is 2112 W Peterson Ave, with 546 occurrences, and surprisingly it's the same least used end station with 685.
+
+6- The most used station for annual members is Canal St & Adams St 58161, and for casual users Streeter Dr & Grand Ave with 54634
+
+7- The least used start station is 2112 W Peterson Ave for both types of users.
+
+8- Total number of rides for the period of (2019-01-01 to 2020-03-30) is 4,241,111rides, Noticed that Annual members have 3315766 rides with the % of 78.18%, and casual members have 925345 rides with the % of 21.81%.
+
+9- The top week day for casual riders bike rides is Saturday, and for annual members is Tuesday.
+
+10- The lowest rides for casual riders is Tuesday, and for annual members is Sunday.
+
+
+My Recommendations:
+1- We can start our campaign by conducting a survey for casual riders on Saturday since it's the top day for casual users.
+
+2- we can conduct a marketing campaign on Saturday, and Streeter Dr & Grand Ave since it's the top for casual users
+3- finally we can make a discount for users only on Thursday, since it's the day when most casual riders have the longest avg ride_length
+## Creating a Trip_data_for_visualizing file
+```{r}
+final_trip_data <- trip_data %>% drop_na() %>% 
+  select(-c(start_time, end_time, trip_duration, ride_length, year))
+
+write.csv(final_trip_data, 
+          file = 'D:/00-Data/02-Google Data Analytics/0000-Case Study/01-First Track Casestudy 1/Bikeshare Data/cyclistic_trip_data 2019_to_2020/rdirectory/00-casestudy final directory/final_trip_data.csv')
+
+```
+
