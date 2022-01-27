@@ -5,37 +5,39 @@ How Does a Bike-Share Navigate Speedy Success?
 •	Business Task Statement:
 How to Convert Casual riders into annual members?
 
-•	Question Asked : 
+•	**Question Asked :** 
 How do annual members and casual riders use bikes differently?
 
-•	Key Stakeholders:
+**•	Key Stakeholders:**
 A)	Primary: Lily Moreno My Direct Manager
 B)	Secondary: Marketing Analytics Team
 C)	Upper Management: Cyclistic Executive team
 
-•	Goal of analysis:
+**•	Goal of analysis:**
 To understand how casual riders and annual members use Cyclistic bikes differently
 •	Data Resources Used:
 Trip data for both casual and annual riders made available by Motivate International Inchttps://divvy-tripdata.s3.amazonaws.com/index.html. under this licensehttps://ride.divvybikes.com/data-license-agreement.)
 
-•	Project Phases:
+**•	Project Phases:**
 The main question is How do annual members and casual riders use Cyclistic bikes differently?
-1-	Ask:
-Deliverable: A clear statement of the business task (How to Convert Casual riders into annual members?)
-2-	Prepare:
-Deliverable: A description of all data sources used:
+
+**1-	Ask:**
+Deliverable: A clear statement of the business task (**How to Convert Casual riders into annual members?**)
+
+**2-	Prepare:**
+Deliverable: A description of all data sources used
+
 A)	 Data is downloaded from Motivate International Inc.
 B)	Downloaded files trip_data_ from 2019 Q1 to 2020 Q1
 C)	CSV files downloaded and saved in one main csv file called(cyclistic_trip_data_2019_q1_to_q4_to_2020_q1)
 D)	Csv file names are (Divvy_Trips_2019_Q1.csv, Divvy_Trips_2019_Q2.csv, Divvy_Trips_2019_Q3.csv, Divvy_Trips_2019_Q4.csv, Divvy_Trips_2020_Q1.csv)
 E)	Files were too large to open with excel and spreadsheets
 F)	all files are imported to R in as vectors (the reason we use R because it’s faster, allows me to use viz to check bias, and I want to go further to the machine learning field so it will allow me to do so because it’s close to Python, and allow algorithms and machine learning)
-.
 
-
-3-	Process:
+**3-	Process**:
 Deliverable: Documentation of any cleaning or manipulation of data (Included in the script, and RMD file)
-•	Quality & Tidiness Issues Found: 
+
+** Quality & Tidiness Issues Found:** 
 1-	Column names are not consistent (q2_2019 has different column names need to be changed).
 2-	The trip_id column Must be al as characters.
 3-	There are some columns in (q1_2020) needs to be removed (rideable_type, start_lat, start_lng, end_lat, end_lng).
@@ -50,16 +52,20 @@ Deliverable: Documentation of any cleaning or manipulation of data (Included in 
 12-	Week days are not ordered correctly
 13-	There are NA's in trip duration column so we will calculate it manually using start and end time
 
-4-	Analyze:
--	Key tasks
+4-	**Analyze:**
+
+**Key tasks**
 A)	Aggregate your data so it’s useful and accessible.
 B)	 Organize and format your data.
 C)	 Perform calculations.
 D)	Identify trends and relationships.
+
 Deliverable: A summary of your analysis (analysis have been made and included in R Script, and RMD) 
-5-	Share:
+
+**5-	Share:**
 “ Share is divided by two steps Key insights found from conduction some descriptive analysis, then a final file version is made and saved as CSV file to create visuals using Tableau” 
-•	Key Insights & surprises about the data:
+
+•	**Key Insights & surprises about the data:**
 1-	The average ride length per minute for casual users is more than premium users.
 2-	Friday has the longest avg_ride_length_per_minute for casual users, However Saturday has the longest avg ride per minute for annual members.
 3-	The maximum ride length per minute for member users occurs on Tuesday, however the maximum ride length per minute for casual users occur on Thursday.
@@ -71,7 +77,7 @@ Deliverable: A summary of your analysis (analysis have been made and included in
 9-	The top week day for casual riders bike rides is Saturday, and for annual members is Tuesday.
 10-	The lowest rides for casual riders is Tuesday, and for annual members is Sunday.
 
-•	My Recommendations:
+**•	My Recommendations:**
 A)	We can start our campaign by conducting a survey for casual riders on Saturday since it's the top day for casual users.
 B)	We can conduct a marketing campaign on Saturday, and Streeter Dr & Grand Ave since it's the top for casual users
 C)	Finally we can make a discount for users only on Thursday, since it's the day when most casual riders have the longest avg ride_length
