@@ -2,8 +2,8 @@
 A full case study capstone project for google data analytics certificate course
 Google Data Analytics Case Study 1
 How Does a Bike-Share Navigate Speedy Success?
-•	Business Task Statement:
-How to Convert Casual riders into annual members?
+
+**•	Business Task Statement: How to Convert Casual riders into annual members?**
 
 •	**Question Asked :** 
 How do annual members and casual riders use bikes differently?
